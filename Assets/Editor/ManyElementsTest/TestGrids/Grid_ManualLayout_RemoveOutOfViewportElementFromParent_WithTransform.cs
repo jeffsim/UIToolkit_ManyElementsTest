@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace ManyElementsTest
@@ -11,7 +9,6 @@ namespace ManyElementsTest
      */
     public class Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform : Grid_ManualLayout_RemoveOutOfViewportElementFromParent
     {
-        public static Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform Instance;
         public override void PopulateWithTestElements()
         {
             Instance = this;
@@ -47,7 +44,8 @@ namespace ManyElementsTest
             }
             else
             {
-                if (parent == null)
+                var wasVisible = parent != null;
+                if (!wasVisible)
                     scrollView.contentContainer.Add(this);
 
                 if (!wasVisible || x != lastX || y != lastY)
@@ -62,8 +60,8 @@ namespace ManyElementsTest
                     if (label != null)
                     {
                         var labelIsVisible = size > 100;
-                        var labelWasVisible1 = label.text.Length > 0;
-                        if (labelIsVisible != labelWasVisible1)
+                        labelWasVisible = label.text.Length > 0;
+                        if (labelIsVisible != labelWasVisible)
                         {
                             label.text = labelIsVisible ? labelText : "";
                         }
@@ -71,7 +69,6 @@ namespace ManyElementsTest
                     lastSizeSet = size;
                 }
             }
-            wasVisible = isVisible;
         }
     }
 }
