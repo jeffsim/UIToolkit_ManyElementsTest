@@ -6,8 +6,8 @@ namespace ManyElementsTest
 {
     public class ManyElementsTestWindow : EditorWindow
     {
-        public static int NumElementsToAddToGrid = 10000;
-        public static int NumTestPassesToRun = 5;
+        public static int NumElementsToAddToGrid = 20000;
+        public static int NumTestPassesToRun = 3;
         public static Texture2D TestTexture;
 
         [MenuItem("Window/ManyElementsTest %T")]

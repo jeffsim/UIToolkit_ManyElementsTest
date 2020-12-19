@@ -47,6 +47,7 @@ namespace ManyElementsTest
             //testsToRun.Add(new Test("ManualLayout_WithTransform", () => new Grid_ManualLayout_WithTransform()));
             testsToRun.Add(new Test("Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform", () => new Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform()));
             testsToRun.Add(new Test("Grid_ManualLayout_RemoveOutOfViewportElementFromParent_MinimizeSizeSet", () => new Grid_ManualLayout_RemoveOutOfViewportElementFromParent_MinimizeSizeSet()));
+            testsToRun.Add(new Test("Grid_ManualLayout_RemoveOutOfViewportElementFromParent_SetLabelOpacity", () => new Grid_ManualLayout_RemoveOutOfViewportElementFromParent_SetLabelOpacity()));
 
             for (int i = 0; i < ManyElementsTestWindow.NumTestPassesToRun; i++)
             {
