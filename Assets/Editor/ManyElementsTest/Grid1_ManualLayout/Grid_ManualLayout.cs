@@ -23,6 +23,8 @@ namespace ManyElementsTest
             RegisterCallback<GeometryChangedEvent>(evt => relayoutElements());
         }
 
+        protected override void OnElementResize() => relayoutElements();
+
         public override void PopulateWithTestElements()
         {
             for (int i = 0; i < ManyElementsTestWindow.NumElementsToAddToGrid; i++)

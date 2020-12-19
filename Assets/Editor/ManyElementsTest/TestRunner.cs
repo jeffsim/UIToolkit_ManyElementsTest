@@ -15,8 +15,7 @@ namespace ManyElementsTest
 
         internal void OutputResults()
         {
-            NumTimesRun--; // remove prepass
-            Debug.Log("Average results for " + TestName + " over " + NumTimesRun + " runs:");
+            Debug.Log("Average results for " + TestName + " over " + NumTimesRun + " run(s):");
             Debug.Log("  Populate time:" + PopulateTime / NumTimesRun + " sec");
             Debug.Log("  Scroll time:" + ScrollTime / NumTimesRun + " sec");
             Debug.Log("  Resize time:" + ResizeTime / NumTimesRun + " sec");
@@ -25,25 +24,20 @@ namespace ManyElementsTest
 
     public static class TestRunner
     {
-        static bool ignoreTestResults;
-
         static internal IEnumerator RunTests(Slider sizeSlider, VisualElement gridContainer)
         {
             var results_ManualLayout = new TestResult() { TestName = "ManualLayout" };
             var results_ListWithWrapping = new TestResult() { TestName = "ListWithWrapping" };
-
-            // Run twice; all once to cache (results = ignored) and then once for the 'real' run
-            for (int i = 0; i < 3; i++)
+            
+            for (int i = 0; i < ManyElementsTestWindow.NumTestPassesToRun; i++)
             {
-                ignoreTestResults = i == 0;
-                if (ignoreTestResults)
-                    Debug.Log("Running prepass (results ignored)");
-                else
-                    Debug.Log("Running pass #" + i);
+                Debug.Log("Running pass #" + i);
                 yield return RunTestWithGridType(sizeSlider, gridContainer, new Grid_ManualLayout(), false, results_ManualLayout);
                 yield return RunTestWithGridType(sizeSlider, gridContainer, new Grid_ListWithWrapping(), false, results_ListWithWrapping);
             }
 
+            Debug.Log("== TESTS COMPLETE ==");
+            Debug.Log("  Viewport size: " + gridContainer.parent.parent.parent.layout.size);
             results_ManualLayout.OutputResults();
             results_ListWithWrapping.OutputResults();
         }
@@ -57,11 +51,11 @@ namespace ManyElementsTest
             sizeSlider.RegisterValueChangedCallback(sliderCB = (val) => grid.SetElementSize(val.newValue));
             sizeSlider.value = (sizeSlider.highValue - sizeSlider.lowValue) / 2;
 
-            if (!ignoreTestResults)
+            if (!justDoSetup)
                 Debug.Log("----- running tests for " + grid);
             yield return null;
 
-            TestPopulateElements(grid, testResult);
+            TestPopulateElements(grid, testResult, justDoSetup);
 
             if (justDoSetup)
                 yield break;
@@ -76,11 +70,11 @@ namespace ManyElementsTest
             gridContainer.Remove(grid);
         }
 
-        static void TestPopulateElements(BaseGrid grid, TestResult testResult)
+        static void TestPopulateElements(BaseGrid grid, TestResult testResult, bool justDoSetup)
         {
             startTestTimer();
             grid.PopulateWithTestElements();
-            if (!ignoreTestResults)
+            if (!justDoSetup)
                 testResult.PopulateTime += endTestTimer();
         }
 
@@ -107,8 +101,7 @@ namespace ManyElementsTest
                 steps++;
                 yield return null;
             }
-            if (!ignoreTestResults)
-                testResult.ScrollTime += endTestTimer();
+            testResult.ScrollTime += endTestTimer();
         }
 
         static internal IEnumerator TestResizeSpeed(Slider sizeSlider, TestResult testResult)
@@ -132,8 +125,7 @@ namespace ManyElementsTest
                     yield return null;
                 }
             }
-            if (!ignoreTestResults)
-                testResult.ResizeTime += endTestTimer();
+            testResult.ResizeTime += endTestTimer();
         }
 
         static long startTime;

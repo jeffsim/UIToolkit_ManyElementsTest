@@ -27,15 +27,8 @@ namespace ManyElementsTest
 
         public GridElement_ManualLayout()
         {
-#if USE_UXML_FOR_GRID_ELEMENT
-            // Load our elements from uxml
-            var gridElementUxml = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/ManyElementsTest/resources/GridElement.uxml"));
-            Add(UI = gridElementUxml.CloneTree());
-            Label = UI.Q<Label>();
-#else
-            // Create our elements manually
             Add(label = new Label());
-#endif
+            AddToClassList("manualLayout");
         }
 
         void initialize(Texture2D image, string labelText)

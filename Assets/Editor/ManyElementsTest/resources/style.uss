@@ -1,12 +1,15 @@
 #testGridContainer {
     flex-grow: 1;
-    padding:4px;
+    padding: 4px;
 }
 
 .gridElement  {
     background-color: #525252;
-    position: absolute;
-    justify-content: flex-end;
+    justify-content: center;
+}
+
+.gridElement Label {
+    margin-bottom: 9px;
 }
 
 .header {
@@ -16,4 +19,35 @@
 #sizeSlider {
     width:200px;
     margin:8px;
+}
+
+
+/**********************/
+/* Manual Layout test */
+
+.gridElement.manualLayout  {
+    position: absolute;
+    justify-content: flex-end;
+}
+
+.gridElement.manualLayout Label {
+    align-self: center;
+}
+
+
+/*************************/
+/* ListWithWrapping test */
+
+.listWithWrapping {
+    flex-wrap: wrap;
+    flex-direction: row;
+    overflow: visible;
+}
+
+.gridElement.listWithWrapping  {
+    position: relative;
+}
+
+.gridElement.listWithWrapping Label {
+    align-self: flex-end;
 }
