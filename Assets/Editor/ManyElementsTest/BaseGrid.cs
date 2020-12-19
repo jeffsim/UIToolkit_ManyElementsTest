@@ -12,12 +12,12 @@ namespace ManyElementsTest
 
         }
         public abstract void PopulateWithTestElements();
-        protected abstract void OnElementResize();
+        protected abstract void OnResizeAllElements();
 
         public void SetElementSize(float newValue)
         {
             gridElementSize = newValue;
-            OnElementResize();
+            OnResizeAllElements();
         }
     }
 }

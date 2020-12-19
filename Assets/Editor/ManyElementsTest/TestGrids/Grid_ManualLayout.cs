@@ -1,9 +1,73 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace ManyElementsTest
 {
+    /* 
+     * 
+     * In this test, grid elements are absolutely positioned, and set to display=none when out of the viewport
+     * 
+     * 
+     */
+    public class Grid_ManualLayout : BaseGrid
+    {
+        public new class UxmlFactory : UxmlFactory<Grid_ManualLayout, UxmlTraits> { }
+
+        List<GridElement_ManualLayout> gridElements = new List<GridElement_ManualLayout>();
+
+        public Grid_ManualLayout()
+        {
+            Add(ScrollView = new ScrollView());
+
+            // When the user scrolls the scrollview, ensure all items have valid tiles
+            ScrollView.verticalScroller.valueChanged += val => relayoutElements();
+
+            // this one is needed for window resize
+            RegisterCallback<GeometryChangedEvent>(evt => relayoutElements());
+        }
+
+        protected override void OnResizeAllElements()
+        {
+            relayoutElements();
+        }
+
+        public override void PopulateWithTestElements()
+        {
+            for (int i = 0; i < ManyElementsTestWindow.NumElementsToAddToGrid; i++)
+            {
+                var el = new GridElement_ManualLayout(ManyElementsTestWindow.TestTexture, "Item " + i);
+                ScrollView.contentContainer.Add(el);
+                gridElements.Add(el);
+            }
+            relayoutElements();
+        }
+
+        protected override void relayoutElements()
+        {
+            float gridWidth = ScrollView.contentContainer.layout.width;
+            float paddedTileSize = gridElementSize + 6;
+            int maxTilesPerRow = Math.Max(1, (int)(gridWidth / paddedTileSize));
+
+            // Calculate vert coord of the scrolled visible rect
+            float viewY1 = ScrollView.scrollOffset.y;
+            float viewY2 = viewY1 + ScrollView.layout.height;
+
+            for (int i = 0; i < gridElements.Count; i++)
+            {
+                float tileX1 = (i % maxTilesPerRow) * paddedTileSize;
+                float tileY1 = (i / maxTilesPerRow) * paddedTileSize;
+                float tileY2 = tileY1 + gridElementSize;
+
+                // Only have to check for vert bounds
+                bool isInViewport = tileY1 < viewY2 && tileY2 >= viewY1;
+                gridElements[i].SetBounds(tileX1, tileY1, gridElementSize, isInViewport);
+            }
+            ScrollView.contentContainer.style.height = ((gridElements.Count - 1) / maxTilesPerRow + 1) * paddedTileSize;
+        }
+    }
+
     public class GridElement_ManualLayout : BaseGridElement
     {
         Label label;
@@ -16,32 +80,18 @@ namespace ManyElementsTest
         float lastY;
         bool wasVisible;
 
-        public static GridElement_ManualLayout GetFromPool(Texture2D image, string labelText)
-        {
-            var el = GridElementPool_ManualLayout.GetFromPool();
-            el.initialize(image, labelText);
-            return el;
-        }
-
-        public void ReturnToPool() => GridElementPool_ManualLayout.ReturnToPool(this);
-
-        public GridElement_ManualLayout()
+        public GridElement_ManualLayout(Texture2D image, string labelText)
         {
             Add(label = new Label());
             AddToClassList("manualLayout");
-        }
 
-        void initialize(Texture2D image, string labelText)
-        {
             // Reset variables that are used to minimize style changes
-            lastSizeSet = -1000;
+            lastSizeSet = float.MaxValue;
             lastDisplayStyle = (DisplayStyle)(-1);
             lastX = float.MaxValue;
             lastY = float.MaxValue;
             wasVisible = false;
-
             style.backgroundImage = image;
-
             this.labelText = labelText;
             label.text = labelText;
         }

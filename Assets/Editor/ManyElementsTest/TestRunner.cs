@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -22,28 +23,46 @@ namespace ManyElementsTest
         }
     }
 
+    public class Test
+    {
+        public Func<BaseGrid> CreateFunc;
+        public TestResult Results;
+        public string Name;
+
+        public Test(string testName, Func<BaseGrid> createFunc)
+        {
+            Name = testName;
+            CreateFunc = createFunc;
+            Results = new TestResult() { TestName = testName };
+        }
+    }
+
     public static class TestRunner
     {
         static internal IEnumerator RunTests(Slider sizeSlider, VisualElement gridContainer)
         {
-            var results_ManualLayout = new TestResult() { TestName = "ManualLayout" };
-            var results_ListWithWrapping = new TestResult() { TestName = "ListWithWrapping" };
-            
+            var testsToRun = new List<Test>();
+            testsToRun.Add(new Test("ManualLayout", () => new Grid_ManualLayout()));
+            testsToRun.Add(new Test("ManualLayout_WithTransform", () => new Grid_ManualLayout_WithTransform()));
+
+            // Following are too slow
+            //testsToRun.Add(new Test("ListWithWrapping", () => new Grid_ListWithWrapping()));
+
             for (int i = 0; i < ManyElementsTestWindow.NumTestPassesToRun; i++)
             {
                 Debug.Log("Running pass #" + i);
-                yield return RunTestWithGridType(sizeSlider, gridContainer, new Grid_ManualLayout(), false, results_ManualLayout);
-                yield return RunTestWithGridType(sizeSlider, gridContainer, new Grid_ListWithWrapping(), false, results_ListWithWrapping);
+                foreach (var test in testsToRun)
+                    yield return RunTest(sizeSlider, gridContainer, test, false);
             }
 
             Debug.Log("== TESTS COMPLETE ==");
             Debug.Log("  Viewport size: " + gridContainer.parent.parent.parent.layout.size);
-            results_ManualLayout.OutputResults();
-            results_ListWithWrapping.OutputResults();
+            testsToRun.ForEach(test => test.Results.OutputResults());
         }
 
-        public static IEnumerator RunTestWithGridType(Slider sizeSlider, VisualElement gridContainer, BaseGrid grid, bool justDoSetup = false, TestResult testResult = null)
+        public static IEnumerator RunTest(Slider sizeSlider, VisualElement gridContainer, Test test, bool justDoSetup = false)
         {
+            var grid = test.CreateFunc();
             gridContainer.Add(grid);
 
             // Setup slider
@@ -52,33 +71,33 @@ namespace ManyElementsTest
             sizeSlider.value = (sizeSlider.highValue - sizeSlider.lowValue) / 2;
 
             if (!justDoSetup)
-                Debug.Log("----- running tests for " + grid);
+                Debug.Log("----- running tests for " + test.Name);
             yield return null;
 
-            TestPopulateElements(grid, testResult, justDoSetup);
+            TestPopulateElements(grid, test, justDoSetup);
 
             if (justDoSetup)
                 yield break;
 
-            yield return TestScrollSpeed(sizeSlider, grid, testResult);
-            yield return TestResizeSpeed(sizeSlider, testResult);
+            yield return TestScrollSpeed(sizeSlider, grid, test);
+            yield return TestResizeSpeed(sizeSlider, test);
 
-            testResult.NumTimesRun++;
+            test.Results.NumTimesRun++;
 
             // cleanup
             sizeSlider.UnregisterValueChangedCallback(sliderCB);
             gridContainer.Remove(grid);
         }
 
-        static void TestPopulateElements(BaseGrid grid, TestResult testResult, bool justDoSetup)
+        static void TestPopulateElements(BaseGrid grid, Test test, bool justDoSetup)
         {
             startTestTimer();
             grid.PopulateWithTestElements();
             if (!justDoSetup)
-                testResult.PopulateTime += endTestTimer();
+                test.Results.PopulateTime += endTestTimer();
         }
 
-        static internal IEnumerator TestScrollSpeed(Slider sizeSlider, BaseGrid grid, TestResult testResult)
+        static internal IEnumerator TestScrollSpeed(Slider sizeSlider, BaseGrid grid, Test test)
         {
             sizeSlider.value = 25;
             yield return null;
@@ -101,10 +120,10 @@ namespace ManyElementsTest
                 steps++;
                 yield return null;
             }
-            testResult.ScrollTime += endTestTimer();
+            test.Results.ScrollTime += endTestTimer();
         }
 
-        static internal IEnumerator TestResizeSpeed(Slider sizeSlider, TestResult testResult)
+        static internal IEnumerator TestResizeSpeed(Slider sizeSlider, Test test)
         {
             sizeSlider.value = sizeSlider.lowValue;
             yield return null;
@@ -125,7 +144,7 @@ namespace ManyElementsTest
                     yield return null;
                 }
             }
-            testResult.ResizeTime += endTestTimer();
+            test.Results.ResizeTime += endTestTimer();
         }
 
         static long startTime;

@@ -3,6 +3,7 @@
     <VisualElement class="header">
       <Slider name="sizeSlider" low-value="20" high-value="200" />
       <Button name="RunTests" text="Run tests"/>
+      <Button name="ShowOne" text="Show one Grid"/>
     </VisualElement>
     <VisualElement name="testGridContainer" />
   </VisualElement>
