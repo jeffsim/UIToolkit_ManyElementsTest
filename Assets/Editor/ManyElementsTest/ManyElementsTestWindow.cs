@@ -46,8 +46,10 @@ namespace ManyElementsTest
             //gridContainer.Add(grid = new Grid_ListWithWrapping());
             // gridContainer.Add(grid = new Grid_ManualLayout_WithTransform());
             // gridContainer.Add(grid = new Grid_ManualLayout_NoDisplayChanges());
-            gridContainer.Add(grid = new Grid_ManualLayout_NoLabel());
+            // gridContainer.Add(grid = new Grid_ManualLayout_NoLabel());
             // gridContainer.Add(grid = new Grid_ManualLayout());
+            gridContainer.Add(grid = new Grid_ManualLayout_OneTimePosition());
+            
             grid.PopulateWithTestElements();
 
             // Setup slider

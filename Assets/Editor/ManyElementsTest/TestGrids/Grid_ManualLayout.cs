@@ -17,7 +17,7 @@ namespace ManyElementsTest
             Add(ScrollView = new ScrollView());
 
             // When the user scrolls the scrollview, ensure all items have valid tiles
-            ScrollView.verticalScroller.valueChanged += val => relayoutElements();
+       //     ScrollView.verticalScroller.valueChanged += val => relayoutElements();
 
             // this one is needed for window resize
             RegisterCallback<GeometryChangedEvent>(evt => relayoutElements());
@@ -31,7 +31,11 @@ namespace ManyElementsTest
         public override void PopulateWithTestElements()
         {
             gridElements.Clear();
+
+            ScrollView.contentContainer.Clear();
+
             DetachFromParent(); // this makes a LOT of difference!
+
             for (int i = 0; i < ManyElementsTestWindow.NumElementsToAddToGrid; i++)
             {
                 var el = new GridElement_ManualLayout(ManyElementsTestWindow.TestTexture, "Item " + i);
@@ -72,22 +76,16 @@ namespace ManyElementsTest
         protected string labelText;
 
         // Fields which are used to minimize style sets unless changed
-        protected float lastSizeSet;
-        protected DisplayStyle lastDisplayStyle;
-        protected float lastX;
-        protected float lastY;
-        protected bool wasVisible;
+        protected float lastSizeSet = float.MaxValue;
+        protected DisplayStyle lastDisplayStyle = (DisplayStyle)(-1);
+        protected float lastX = float.MaxValue;
+        protected float lastY = float.MaxValue;
+        protected bool wasVisible = false;
+        protected bool labelWasVisible = false;
 
         public GridElement_ManualLayout(Texture2D image, string labelText)
         {
             AddToClassList("manualLayout");
-
-            // Reset variables that are used to minimize style changes
-            lastSizeSet = float.MaxValue;
-            lastDisplayStyle = (DisplayStyle)(-1);
-            lastX = float.MaxValue;
-            lastY = float.MaxValue;
-            wasVisible = false;
             style.backgroundImage = image;
             
             if (labelText != null)
@@ -134,7 +132,15 @@ namespace ManyElementsTest
                 {
                     style.width = size;
                     style.height = size;
-                    label.text = size > 100 ? labelText : "";
+                    if (label != null)
+                    {
+                        var labelIsVisible = size > 100;
+                        if (labelIsVisible != labelWasVisible)
+                        {
+                            labelWasVisible = labelIsVisible;
+                            label.text = labelIsVisible ? labelText : "";
+                        }
+                    }
                     lastSizeSet = size;
                 }
             }

@@ -46,6 +46,7 @@ namespace ManyElementsTest
             testsToRun.Add(new Test("ManualLayout_WithTransform", () => new Grid_ManualLayout_WithTransform()));
             testsToRun.Add(new Test("Grid_ManualLayout_NoDisplayChanges", () => new Grid_ManualLayout_NoDisplayChanges()));
             testsToRun.Add(new Test("Grid_ManualLayout_NoLabel", () => new Grid_ManualLayout_NoLabel()));
+            testsToRun.Add(new Test("Grid_ManualLayout_OneTimePosition", () => new Grid_ManualLayout_OneTimePosition()));
 
             // Following are too slow
             //testsToRun.Add(new Test("ListWithWrapping", () => new Grid_ListWithWrapping()));
@@ -58,6 +59,7 @@ namespace ManyElementsTest
             }
 
             Debug.Log("== TESTS COMPLETE ==");
+            Debug.Log("  # elements in grid: " + ManyElementsTestWindow.NumElementsToAddToGrid);
             Debug.Log("  Viewport size: " + gridContainer.parent.parent.parent.layout.size);
             testsToRun.ForEach(test => test.Results.OutputResults());
         }

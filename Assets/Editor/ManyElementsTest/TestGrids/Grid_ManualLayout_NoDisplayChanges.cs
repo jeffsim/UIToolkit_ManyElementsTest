@@ -35,17 +35,10 @@ namespace ManyElementsTest
         {
             if (!isVisible)
             {
-                if (x != lastX || y != lastY)
-                {
-                    // style.left = lastX = float.MaxValue;
-                    style.display = DisplayStyle.None;
-                }
+                style.left = lastX = -1000;
             }
             else
             {
-
-                style.display = DisplayStyle.Flex;
-                // Update location (if changed).  I'm assuming changing one of [left,top] is as expensive as changing both
                 if (!wasVisible || x != lastX || y != lastY)
                 {
                     // this.transform.position = new Vector3(x, y, transform.position.z);
@@ -58,7 +51,13 @@ namespace ManyElementsTest
                 {
                     style.width = size;
                     style.height = size;
-                    label.text = size > 100 ? labelText : "";
+                   
+                    var labelIsVisible = size > 100;
+                    // if (labelIsVisible != labelWasVisible)
+                    {
+                        label.text = labelIsVisible ? labelText : "";
+                        labelWasVisible = labelIsVisible;
+                    }
                     lastSizeSet = size;
                 }
             }

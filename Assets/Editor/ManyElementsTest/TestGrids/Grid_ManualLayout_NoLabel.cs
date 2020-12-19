@@ -12,9 +12,7 @@ namespace ManyElementsTest
         public override void PopulateWithTestElements()
         {
             gridElements.Clear();
-
             DetachFromParent(); // this makes a LOT of difference!
-            
             for (int i = 0; i < ManyElementsTestWindow.NumElementsToAddToGrid; i++)
             {
                 var el = new GridElement_ManualLayout_NoLabel(ManyElementsTestWindow.TestTexture);
@@ -45,8 +43,6 @@ namespace ManyElementsTest
         {
             if (!isVisible)
             {
-                // TODO (PERF): Note to self: commenting out this and the inverse below makes scrolling super fast...
-                // but it also breaks when resizing.
                 if (lastDisplayStyle != DisplayStyle.None)
                 {
                     style.display = DisplayStyle.None;

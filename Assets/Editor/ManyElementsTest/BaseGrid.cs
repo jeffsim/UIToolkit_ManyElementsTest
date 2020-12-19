@@ -1,4 +1,5 @@
-﻿using UnityEngine.UIElements;
+﻿using System;
+using UnityEngine.UIElements;
 
 namespace ManyElementsTest
 {
@@ -32,5 +33,9 @@ namespace ManyElementsTest
         {
             detachedFromParent.Add(this);
         }
+
+        long startTime;
+        protected void startTestTimer() => startTime = DateTime.Now.Ticks;
+        protected float endTestTimer() => (DateTime.Now.Ticks - startTime) / 10000000f;
     }
 }

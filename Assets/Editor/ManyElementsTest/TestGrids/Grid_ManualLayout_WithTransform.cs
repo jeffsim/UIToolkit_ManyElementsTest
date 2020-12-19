@@ -60,8 +60,16 @@ namespace ManyElementsTest
                 if (!wasVisible || size != lastSizeSet)
                 {
                     style.width = size;
-                    style.height = size;
-                    label.text = size > 100 ? labelText : "";
+                    style.height = size;   
+                    if (label != null)
+                    {
+                        var labelIsVisible = size > 100;
+                        if (labelIsVisible != labelWasVisible)
+                        {
+                            labelWasVisible = labelIsVisible;
+                            label.text = labelIsVisible ? labelText : "";
+                        }
+                    }
                     lastSizeSet = size;
                 }
             }
