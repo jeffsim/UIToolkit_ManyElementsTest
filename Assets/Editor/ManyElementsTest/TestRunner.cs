@@ -17,7 +17,7 @@ namespace ManyElementsTest
         internal void OutputResults()
         {
             Debug.Log("Average results for " + TestName + " over " + NumTimesRun + " run(s):");
-            Debug.Log("  Populate time:" + PopulateTime / NumTimesRun + " sec");
+          //  Debug.Log("  Populate time:" + PopulateTime / NumTimesRun + " sec");
             Debug.Log("  Scroll time:" + ScrollTime / NumTimesRun + " sec");
             Debug.Log("  Resize time:" + ResizeTime / NumTimesRun + " sec");
         }
@@ -45,8 +45,8 @@ namespace ManyElementsTest
 
             var testsToRun = new List<Test>();
             //testsToRun.Add(new Test("ManualLayout_WithTransform", () => new Grid_ManualLayout_WithTransform()));
-            testsToRun.Add(new Test("Grid_ManualLayout_RemoveOutOfViewportElementFromParent", () => new Grid_ManualLayout_RemoveOutOfViewportElementFromParent()));
             testsToRun.Add(new Test("Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform", () => new Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform()));
+            testsToRun.Add(new Test("Grid_ManualLayout_RemoveOutOfViewportElementFromParent_MinimizeSizeSet", () => new Grid_ManualLayout_RemoveOutOfViewportElementFromParent_MinimizeSizeSet()));
 
             for (int i = 0; i < ManyElementsTestWindow.NumTestPassesToRun; i++)
             {

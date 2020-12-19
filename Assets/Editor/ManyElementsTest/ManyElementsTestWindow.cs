@@ -51,10 +51,19 @@ namespace ManyElementsTest
             // gridContainer.Add(grid = new Grid_OnlyRepositionOnResize());
             // gridContainer.Add(grid = new Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithDetach());
             // gridContainer.Add(grid = new Grid_ManualLayout_RemoveOutOfViewportElementFromParent_SetDisabled());
-            gridContainer.Add(grid = new Grid_ManualLayout_RemoveOutOfViewportElementFromParent_SetLabelDisabled());
-            
-            // BEST SO FAR:
-            //gridContainer.Add(grid = new Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform());
+
+            //== following *should* be faster..
+
+            // Interesting - I'd've thought the following would avoid a relayout and thus be faster, but it's slower
+            // than Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform...
+            // gridContainer.Add(grid = new Grid_ManualLayout_RemoveOutOfViewportElementFromParent_SetLabelOpacity());
+
+            // Try this one on PC; see if it feesl better
+            // gridContainer.Add(grid = new Grid_ManualLayout_RemoveOutOfViewportElementFromParent_MinimizeSizeSet());
+
+
+            // BEST SO FAR:  Odd; some of the above *should* be faster.
+            gridContainer.Add(grid = new Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform());
 
 
 

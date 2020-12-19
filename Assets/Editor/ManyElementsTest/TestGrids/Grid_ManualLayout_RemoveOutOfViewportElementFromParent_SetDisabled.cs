@@ -45,7 +45,7 @@ namespace ManyElementsTest
                     SetEnabled(true);
 
                 if (!wasVisible || x != lastX || y != lastY)
-                    transform.position = new Vector3(x, y, transform.position.z);
+                    transform.position = new Vector3(lastX = x, lastY = y, transform.position.z);
 
                 if (!wasVisible || size != lastSizeSet)
                 {

@@ -5,9 +5,9 @@ namespace ManyElementsTest
 {
     /* 
      * This test is the same as Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform except this one 
-     * tries to avoid the alloc on the label by disabling it instead of setting text
+     * tries to avoid the alloc on the label by setting opacity to 0 on it instead of setting text
      */
-    public class Grid_ManualLayout_RemoveOutOfViewportElementFromParent_SetLabelDisabled : Grid_ManualLayout_RemoveOutOfViewportElementFromParent
+    public class Grid_ManualLayout_RemoveOutOfViewportElementFromParent_SetLabelOpacity : Grid_ManualLayout_RemoveOutOfViewportElementFromParent
     {
         public override void PopulateWithTestElements()
         {
@@ -49,7 +49,7 @@ namespace ManyElementsTest
                     scrollView.contentContainer.Add(this);
 
                 if (!wasVisible || x != lastX || y != lastY)
-                    transform.position = new Vector3(x, y, transform.position.z);
+                    transform.position = new Vector3(lastX = x, lastY = y, transform.position.z);
 
                 if (!wasVisible || size != lastSizeSet)
                 {
@@ -57,12 +57,11 @@ namespace ManyElementsTest
                     style.height = size;
                     lastSizeSet = size;
 
-                    if (label != null)
+                    var labelIsVisible = size > 100;
+                    if (!wasVisible || labelIsVisible != labelWasVisible)
                     {
-                        var labelIsVisible = size > 100;
-                        labelWasVisible = label.style.opacity == 1;
-                        if (labelIsVisible != labelWasVisible)
-                            label.style.opacity = labelIsVisible ? 1 : 0;
+                        label.style.opacity = labelIsVisible ? 1 : 0;
+                        labelWasVisible = labelIsVisible;
                     }
                 }
             }

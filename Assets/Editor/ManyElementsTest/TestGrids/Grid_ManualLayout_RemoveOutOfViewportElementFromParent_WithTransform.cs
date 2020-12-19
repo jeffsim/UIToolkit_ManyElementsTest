@@ -49,22 +49,19 @@ namespace ManyElementsTest
                     scrollView.contentContainer.Add(this);
 
                 if (!wasVisible || x != lastX || y != lastY)
-                    transform.position = new Vector3(x, y, transform.position.z);
+                    transform.position = new Vector3(lastX = x, lastY = y, transform.position.z);
 
                 if (!wasVisible || size != lastSizeSet)
                 {
                     style.width = size;
                     style.height = size;
                     lastSizeSet = size;
-                 
-                    if (label != null)
+
+                    var labelIsVisible = size > 100;
+                    labelWasVisible = label.text.Length > 0;
+                    if (labelIsVisible != labelWasVisible)
                     {
-                        var labelIsVisible = size > 100;
-                        labelWasVisible = label.text.Length > 0;
-                        if (labelIsVisible != labelWasVisible)
-                        {
-                            label.text = labelIsVisible ? labelText : "";
-                        }
+                        label.text = labelIsVisible ? labelText : "";
                     }
                 }
             }
