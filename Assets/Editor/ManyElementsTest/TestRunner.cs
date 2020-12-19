@@ -41,13 +41,12 @@ namespace ManyElementsTest
     {
         static internal IEnumerator RunTests(Slider sizeSlider, VisualElement gridContainer)
         {
-            var testsToRun = new List<Test>();
-       //    testsToRun.Add(new Test("ManualLayout_WithTransform", () => new Grid_ManualLayout_WithTransform()));
-            testsToRun.Add(new Test("Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform", () => new Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform()));
-            testsToRun.Add(new Test("Grid_ManualLayout_RemoveOutOfViewportElementFromParent", () => new Grid_ManualLayout_RemoveOutOfViewportElementFromParent()));
+            Debug.Log("----------------------------------------------------");
 
-            // Following are too slow
-            //testsToRun.Add(new Test("ListWithWrapping", () => new Grid_ListWithWrapping()));
+            var testsToRun = new List<Test>();
+            //testsToRun.Add(new Test("ManualLayout_WithTransform", () => new Grid_ManualLayout_WithTransform()));
+            testsToRun.Add(new Test("Grid_ManualLayout_RemoveOutOfViewportElementFromParent", () => new Grid_ManualLayout_RemoveOutOfViewportElementFromParent()));
+            testsToRun.Add(new Test("Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform", () => new Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform()));
 
             for (int i = 0; i < ManyElementsTestWindow.NumTestPassesToRun; i++)
             {
@@ -72,8 +71,8 @@ namespace ManyElementsTest
             sizeSlider.RegisterValueChangedCallback(sliderCB = (val) => grid.SetElementSize(val.newValue));
             sizeSlider.value = (sizeSlider.highValue - sizeSlider.lowValue) / 2;
 
-            if (!justDoSetup)
-                Debug.Log("----- running tests for " + test.Name);
+            //if (!justDoSetup)
+            //    Debug.Log("----- running tests for " + test.Name);
             yield return null;
 
             TestPopulateElements(grid, test, justDoSetup);
@@ -105,21 +104,19 @@ namespace ManyElementsTest
             yield return null;
 
             startTestTimer();
-            var scrollSpeed = new Vector2(0, 150);
+            var scrollSpeed = new Vector2(0, 250);
             int steps = 0, maxSteps = 40;
             var scrollView = grid.ScrollView;
             var elementContainer = grid.ScrollView.contentContainer;
-            while (scrollView.scrollOffset.y < elementContainer.worldBound.height - scrollView.worldBound.height && steps < maxSteps)
+            while (scrollView.scrollOffset.y < elementContainer.worldBound.height - scrollView.worldBound.height && steps++ < maxSteps)
             {
                 scrollView.scrollOffset += scrollSpeed;
-                steps++;
                 yield return null;
             }
             steps = 0;
-            while (scrollView.scrollOffset.y > 0 && steps < maxSteps)
+            while (scrollView.scrollOffset.y > 0 && steps++ < maxSteps)
             {
                 scrollView.scrollOffset -= scrollSpeed;
-                steps++;
                 yield return null;
             }
             test.Results.ScrollTime += endTestTimer();

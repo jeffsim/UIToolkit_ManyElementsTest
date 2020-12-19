@@ -29,6 +29,8 @@ namespace ManyElementsTest
 
         protected override void relayoutElements()
         {
+            // DON'T do this here.  Slows it down a lot.  Only helpful on add/remove
+            // Leaving here since that's this test
             DetachFromParent();
 
             float gridWidth = ScrollView.contentContainer.layout.width;

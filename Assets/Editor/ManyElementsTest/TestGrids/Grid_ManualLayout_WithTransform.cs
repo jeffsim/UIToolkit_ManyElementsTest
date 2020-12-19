@@ -53,8 +53,6 @@ namespace ManyElementsTest
                 if (!wasVisible || x != lastX || y != lastY)
                 {
                     this.transform.position = new Vector3(x, y, transform.position.z);
-                    //style.left = lastX = x;
-                    //style.top = lastY = y;
                 }
 
                 if (!wasVisible || size != lastSizeSet)

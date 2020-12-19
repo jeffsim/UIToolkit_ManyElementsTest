@@ -123,7 +123,6 @@ namespace ManyElementsTest
                 // Update location (if changed).  I'm assuming changing one of [left,top] is as expensive as changing both
                 if (!wasVisible || x != lastX || y != lastY)
                 {
-                    //this.transform.position = new Vector3(x, y, transform.position.z);
                     style.left = lastX = x;
                     style.top = lastY = y;
                 }

@@ -7,7 +7,7 @@ namespace ManyElementsTest
      * This test is the same as Grid_ManualLayout_RemoveOutOfViewportElementFromParent except this one 
      * updates transform rather than style
      */
-    public class Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform : Grid_ManualLayout_RemoveOutOfViewportElementFromParent
+    public class Grid_ManualLayout_RemoveOutOfViewportElementFromParent_SetDisabled : Grid_ManualLayout_RemoveOutOfViewportElementFromParent
     {
         public override void PopulateWithTestElements()
         {
@@ -16,7 +16,7 @@ namespace ManyElementsTest
             DetachFromParent(); // this makes a LOT of difference when adding elements!
             for (int i = 0; i < ManyElementsTestWindow.NumElementsToAddToGrid; i++)
             {
-                var el = new GridElement_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform(ManyElementsTestWindow.TestTexture, "Item " + i, ScrollView);
+                var el = new GridElement_ManualLayout_RemoveOutOfViewportElementFromParent_SetDisabled(ManyElementsTestWindow.TestTexture, "Item " + i);
                 ScrollView.contentContainer.Add(el);
                 gridElements.Add(el);
             }
@@ -25,28 +25,24 @@ namespace ManyElementsTest
         }
     }
 
-    public class GridElement_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform : GridElement_ManualLayout
+    public class GridElement_ManualLayout_RemoveOutOfViewportElementFromParent_SetDisabled : GridElement_ManualLayout
     {
-        public GridElement_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform(Texture2D image, string labelText, ScrollView scrollView) :
+        public GridElement_ManualLayout_RemoveOutOfViewportElementFromParent_SetDisabled(Texture2D image, string labelText) :
             base(image, labelText)
         {
-            this.scrollView = scrollView;
         }
-
-        ScrollView scrollView;
 
         public override void SetBounds(float x, float y, float size, bool isVisible)
         {
             if (!isVisible)
             {
-                if (parent != null)
-                    scrollView.contentContainer.Remove(this);
+                if (enabledSelf)
+                    SetEnabled(false);
             }
             else
             {
-                var wasVisible = parent != null;
-                if (!wasVisible)
-                    scrollView.contentContainer.Add(this);
+                if (!enabledSelf)
+                    SetEnabled(true);
 
                 if (!wasVisible || x != lastX || y != lastY)
                     transform.position = new Vector3(x, y, transform.position.z);
@@ -56,7 +52,7 @@ namespace ManyElementsTest
                     style.width = size;
                     style.height = size;
                     lastSizeSet = size;
-                 
+
                     if (label != null)
                     {
                         var labelIsVisible = size > 100;

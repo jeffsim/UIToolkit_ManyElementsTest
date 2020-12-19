@@ -6,7 +6,7 @@ namespace ManyElementsTest
 {
     public class ManyElementsTestWindow : EditorWindow
     {
-        public static int NumElementsToAddToGrid = 20000;
+        public static int NumElementsToAddToGrid = 10000;
         public static int NumTestPassesToRun = 5;
         public static Texture2D TestTexture;
 
@@ -49,10 +49,16 @@ namespace ManyElementsTest
             // gridContainer.Add(grid = new Grid_ManualLayout_NoLabel());
             // gridContainer.Add(grid = new Grid_ManualLayout());
             // gridContainer.Add(grid = new Grid_OnlyRepositionOnResize());
-            // gridContainer.Add(grid = new Grid_ManualLayout_RemoveOutOfViewportElementFromParent());
-            gridContainer.Add(grid = new Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithDetach());
+            // gridContainer.Add(grid = new Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithDetach());
+            // gridContainer.Add(grid = new Grid_ManualLayout_RemoveOutOfViewportElementFromParent_SetDisabled());
+            gridContainer.Add(grid = new Grid_ManualLayout_RemoveOutOfViewportElementFromParent_SetLabelDisabled());
             
-            
+            // BEST SO FAR:
+            //gridContainer.Add(grid = new Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform());
+
+
+
+
             grid.PopulateWithTestElements();
 
             // Setup slider

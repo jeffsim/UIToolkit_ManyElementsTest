@@ -4,10 +4,10 @@ using UnityEngine.UIElements;
 namespace ManyElementsTest
 {
     /* 
-     * This test is the same as Grid_ManualLayout_RemoveOutOfViewportElementFromParent except this one 
-     * updates transform rather than style
+     * This test is the same as Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform except this one 
+     * tries to avoid the alloc on the label by disabling it instead of setting text
      */
-    public class Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform : Grid_ManualLayout_RemoveOutOfViewportElementFromParent
+    public class Grid_ManualLayout_RemoveOutOfViewportElementFromParent_SetLabelDisabled : Grid_ManualLayout_RemoveOutOfViewportElementFromParent
     {
         public override void PopulateWithTestElements()
         {
@@ -16,7 +16,7 @@ namespace ManyElementsTest
             DetachFromParent(); // this makes a LOT of difference when adding elements!
             for (int i = 0; i < ManyElementsTestWindow.NumElementsToAddToGrid; i++)
             {
-                var el = new GridElement_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform(ManyElementsTestWindow.TestTexture, "Item " + i, ScrollView);
+                var el = new GridElement_ManualLayout_RemoveOutOfViewportElementFromParent_SetLabelDisabled(ManyElementsTestWindow.TestTexture, "Item " + i, ScrollView);
                 ScrollView.contentContainer.Add(el);
                 gridElements.Add(el);
             }
@@ -25,9 +25,9 @@ namespace ManyElementsTest
         }
     }
 
-    public class GridElement_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform : GridElement_ManualLayout
+    public class GridElement_ManualLayout_RemoveOutOfViewportElementFromParent_SetLabelDisabled : GridElement_ManualLayout
     {
-        public GridElement_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform(Texture2D image, string labelText, ScrollView scrollView) :
+        public GridElement_ManualLayout_RemoveOutOfViewportElementFromParent_SetLabelDisabled(Texture2D image, string labelText, ScrollView scrollView) :
             base(image, labelText)
         {
             this.scrollView = scrollView;
@@ -56,15 +56,13 @@ namespace ManyElementsTest
                     style.width = size;
                     style.height = size;
                     lastSizeSet = size;
-                 
+
                     if (label != null)
                     {
                         var labelIsVisible = size > 100;
-                        labelWasVisible = label.text.Length > 0;
+                        labelWasVisible = label.style.opacity == 1;
                         if (labelIsVisible != labelWasVisible)
-                        {
-                            label.text = labelIsVisible ? labelText : "";
-                        }
+                            label.style.opacity = labelIsVisible ? 1 : 0;
                     }
                 }
             }
