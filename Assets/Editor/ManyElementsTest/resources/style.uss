@@ -1,0 +1,19 @@
+#testGridContainer {
+    flex-grow: 1;
+    padding:4px;
+}
+
+.gridElement  {
+    background-color: #525252;
+    position: absolute;
+    justify-content: flex-end;
+}
+
+.header {
+    flex-direction: row;
+}
+
+#sizeSlider {
+    width:200px;
+    margin:8px;
+}

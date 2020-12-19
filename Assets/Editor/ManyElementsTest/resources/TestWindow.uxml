@@ -1,0 +1,9 @@
+<UXML xmlns="UnityEngine.UIElements" xmlns:met="ManyElementsTest">
+  <VisualElement>
+    <VisualElement class="header">
+      <Slider name="sizeSlider" low-value="20" high-value="200" />
+      <Button name="RunTests" text="Run tests"/>
+    </VisualElement>
+    <VisualElement name="testGridContainer" />
+  </VisualElement>
+</UXML>
