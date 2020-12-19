@@ -6,17 +6,20 @@ using UnityEngine.UIElements;
 namespace ManyElementsTest
 {
     /* 
-     * This test is the same as Grid_ManualLayout except this one modifies transform rather than style.left/style.right
+     * This test is the same as Grid_ManualLayout_RemoveOutOfViewportElementFromParent except this one 
+     * updates transform rather than style
      */
-    public class Grid_ManualLayout_WithTransform : Grid_ManualLayout
+    public class Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform : Grid_ManualLayout_RemoveOutOfViewportElementFromParent
     {
+        public static Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform Instance;
         public override void PopulateWithTestElements()
         {
+            Instance = this;
             gridElements.Clear();
             DetachFromParent(); // this makes a LOT of difference when adding elements!
             for (int i = 0; i < ManyElementsTestWindow.NumElementsToAddToGrid; i++)
             {
-                var el = new GridElement_ManualLayout_WithTransform(ManyElementsTestWindow.TestTexture, "Item " + i);
+                var el = new GridElement_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform(ManyElementsTestWindow.TestTexture, "Item " + i, ScrollView);
                 ScrollView.contentContainer.Add(el);
                 gridElements.Add(el);
             }
@@ -25,48 +28,45 @@ namespace ManyElementsTest
         }
     }
 
-    public class GridElement_ManualLayout_WithTransform : GridElement_ManualLayout
+    public class GridElement_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform : GridElement_ManualLayout
     {
-        public GridElement_ManualLayout_WithTransform(Texture2D image, string labelText) :
+        public GridElement_ManualLayout_RemoveOutOfViewportElementFromParent_WithTransform(Texture2D image, string labelText, ScrollView scrollView) :
             base(image, labelText)
         {
+            this.scrollView = scrollView;
         }
+
+        ScrollView scrollView;
 
         public override void SetBounds(float x, float y, float size, bool isVisible)
         {
             if (!isVisible)
             {
-                if (lastDisplayStyle != DisplayStyle.None)
-                {
-                    style.display = DisplayStyle.None;
-                    lastDisplayStyle = DisplayStyle.None;
-                }
+                if (parent != null)
+                    scrollView.contentContainer.Remove(this);
             }
             else
             {
-                if (!wasVisible || lastDisplayStyle != DisplayStyle.Flex)
-                {
-                    style.display = DisplayStyle.Flex;
-                    lastDisplayStyle = DisplayStyle.Flex;
-                }
+                if (parent == null)
+                    scrollView.contentContainer.Add(this);
 
                 if (!wasVisible || x != lastX || y != lastY)
                 {
                     this.transform.position = new Vector3(x, y, transform.position.z);
-                    //style.left = lastX = x;
-                    //style.top = lastY = y;
                 }
 
                 if (!wasVisible || size != lastSizeSet)
                 {
                     style.width = size;
-                    style.height = size;   
+                    style.height = size;
                     if (label != null)
                     {
-                        var labelIsVisible = size > 100; 
-                         var labelWasVisible1 = label.text.Length > 0;
+                        var labelIsVisible = size > 100;
+                        var labelWasVisible1 = label.text.Length > 0;
                         if (labelIsVisible != labelWasVisible1)
+                        {
                             label.text = labelIsVisible ? labelText : "";
+                        }
                     }
                     lastSizeSet = size;
                 }

@@ -7,6 +7,7 @@ namespace ManyElementsTest
 {
     /* 
      * In this test, grid elements are absolutely positioned, and set to display=none when out of the viewport
+     * The latter requires us to relayout on every scroll
      */
     public class Grid_ManualLayout : BaseGrid
     {
@@ -17,7 +18,7 @@ namespace ManyElementsTest
             Add(ScrollView = new ScrollView());
 
             // When the user scrolls the scrollview, ensure all items have valid tiles
-       //     ScrollView.verticalScroller.valueChanged += val => relayoutElements();
+            ScrollView.verticalScroller.valueChanged += val => relayoutElements();
 
             // this one is needed for window resize
             RegisterCallback<GeometryChangedEvent>(evt => relayoutElements());
@@ -34,7 +35,7 @@ namespace ManyElementsTest
 
             ScrollView.contentContainer.Clear();
 
-            DetachFromParent(); // this makes a LOT of difference!
+            DetachFromParent(); // this makes a LOT of difference when adding elements!
 
             for (int i = 0; i < ManyElementsTestWindow.NumElementsToAddToGrid; i++)
             {

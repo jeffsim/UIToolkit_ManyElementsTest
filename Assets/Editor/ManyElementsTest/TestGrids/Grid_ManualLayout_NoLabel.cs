@@ -12,7 +12,7 @@ namespace ManyElementsTest
         public override void PopulateWithTestElements()
         {
             gridElements.Clear();
-            DetachFromParent(); // this makes a LOT of difference!
+            DetachFromParent(); // this makes a LOT of difference when adding elements!
             for (int i = 0; i < ManyElementsTestWindow.NumElementsToAddToGrid; i++)
             {
                 var el = new GridElement_ManualLayout_NoLabel(ManyElementsTestWindow.TestTexture);

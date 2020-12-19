@@ -7,7 +7,7 @@ namespace ManyElementsTest
     public class ManyElementsTestWindow : EditorWindow
     {
         public static int NumElementsToAddToGrid = 20000;
-        public static int NumTestPassesToRun = 1;
+        public static int NumTestPassesToRun = 5;
         public static Texture2D TestTexture;
 
         [MenuItem("Window/ManyElementsTest %T")]
@@ -48,7 +48,10 @@ namespace ManyElementsTest
             // gridContainer.Add(grid = new Grid_ManualLayout_NoDisplayChanges());
             // gridContainer.Add(grid = new Grid_ManualLayout_NoLabel());
             // gridContainer.Add(grid = new Grid_ManualLayout());
-            gridContainer.Add(grid = new Grid_ManualLayout_OneTimePosition());
+            // gridContainer.Add(grid = new Grid_OnlyRepositionOnResize());
+            // gridContainer.Add(grid = new Grid_ManualLayout_RemoveOutOfViewportElementFromParent());
+            gridContainer.Add(grid = new Grid_ManualLayout_RemoveOutOfViewportElementFromParent_WithDetach());
+            
             
             grid.PopulateWithTestElements();
 

@@ -29,7 +29,7 @@ namespace ManyElementsTest
 
         public override void PopulateWithTestElements()
         {
-            DetachFromParent(); // this makes a LOT of difference!
+            DetachFromParent(); // this makes a LOT of difference when adding elements!
       
             for (int i = 0; i < ManyElementsTestWindow.NumElementsToAddToGrid; i++)
                 ScrollView.contentContainer.Add(new GridElement_ListWithWrapping(ManyElementsTestWindow.TestTexture, "Item " + i));
