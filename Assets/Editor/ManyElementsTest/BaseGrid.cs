@@ -19,5 +19,18 @@ namespace ManyElementsTest
             gridElementSize = newValue;
             OnResizeAllElements();
         }
+
+        VisualElement detachedFromParent;
+        protected void DetachFromParent()
+        {
+            // NOTE: This makes a TON of difference when > 10k items.
+            detachedFromParent = parent;
+            parent.Remove(this);
+        }
+
+        protected void ReattachToParent()
+        {
+            detachedFromParent.Add(this);
+        }
     }
 }

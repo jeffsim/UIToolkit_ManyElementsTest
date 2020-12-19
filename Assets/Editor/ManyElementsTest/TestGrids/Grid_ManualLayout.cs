@@ -6,16 +6,11 @@ using UnityEngine.UIElements;
 namespace ManyElementsTest
 {
     /* 
-     * 
      * In this test, grid elements are absolutely positioned, and set to display=none when out of the viewport
-     * 
-     * 
      */
     public class Grid_ManualLayout : BaseGrid
     {
-        public new class UxmlFactory : UxmlFactory<Grid_ManualLayout, UxmlTraits> { }
-
-        List<GridElement_ManualLayout> gridElements = new List<GridElement_ManualLayout>();
+        protected List<GridElement_ManualLayout> gridElements = new List<GridElement_ManualLayout>();
 
         public Grid_ManualLayout()
         {
@@ -35,12 +30,15 @@ namespace ManyElementsTest
 
         public override void PopulateWithTestElements()
         {
+            gridElements.Clear();
+            DetachFromParent(); // this makes a LOT of difference!
             for (int i = 0; i < ManyElementsTestWindow.NumElementsToAddToGrid; i++)
             {
                 var el = new GridElement_ManualLayout(ManyElementsTestWindow.TestTexture, "Item " + i);
                 ScrollView.contentContainer.Add(el);
                 gridElements.Add(el);
             }
+            ReattachToParent();
             relayoutElements();
         }
 
@@ -70,19 +68,18 @@ namespace ManyElementsTest
 
     public class GridElement_ManualLayout : BaseGridElement
     {
-        Label label;
-        string labelText;
+        protected Label label;
+        protected string labelText;
 
         // Fields which are used to minimize style sets unless changed
-        float lastSizeSet;
-        DisplayStyle lastDisplayStyle;
-        float lastX;
-        float lastY;
-        bool wasVisible;
+        protected float lastSizeSet;
+        protected DisplayStyle lastDisplayStyle;
+        protected float lastX;
+        protected float lastY;
+        protected bool wasVisible;
 
         public GridElement_ManualLayout(Texture2D image, string labelText)
         {
-            Add(label = new Label());
             AddToClassList("manualLayout");
 
             // Reset variables that are used to minimize style changes
@@ -92,11 +89,16 @@ namespace ManyElementsTest
             lastY = float.MaxValue;
             wasVisible = false;
             style.backgroundImage = image;
-            this.labelText = labelText;
-            label.text = labelText;
+            
+            if (labelText != null)
+            {
+                Add(label = new Label());
+                this.labelText = labelText;
+                label.text = labelText;
+            }
         }
 
-        public void SetBounds(float x, float y, float size, bool isVisible)
+        public virtual void SetBounds(float x, float y, float size, bool isVisible)
         {
             if (!isVisible)
             {

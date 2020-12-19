@@ -44,6 +44,8 @@ namespace ManyElementsTest
             var testsToRun = new List<Test>();
             testsToRun.Add(new Test("ManualLayout", () => new Grid_ManualLayout()));
             testsToRun.Add(new Test("ManualLayout_WithTransform", () => new Grid_ManualLayout_WithTransform()));
+            testsToRun.Add(new Test("Grid_ManualLayout_NoDisplayChanges", () => new Grid_ManualLayout_NoDisplayChanges()));
+            testsToRun.Add(new Test("Grid_ManualLayout_NoLabel", () => new Grid_ManualLayout_NoLabel()));
 
             // Following are too slow
             //testsToRun.Add(new Test("ListWithWrapping", () => new Grid_ListWithWrapping()));
@@ -99,11 +101,11 @@ namespace ManyElementsTest
 
         static internal IEnumerator TestScrollSpeed(Slider sizeSlider, BaseGrid grid, Test test)
         {
-            sizeSlider.value = 25;
+            sizeSlider.value = sizeSlider.lowValue;
             yield return null;
 
             startTestTimer();
-            var scrollSpeed = new Vector2(0, 20);
+            var scrollSpeed = new Vector2(0, 150);
             int steps = 0, maxSteps = 40;
             var scrollView = grid.ScrollView;
             var elementContainer = grid.ScrollView.contentContainer;

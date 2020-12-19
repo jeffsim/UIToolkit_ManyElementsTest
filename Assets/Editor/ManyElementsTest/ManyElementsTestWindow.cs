@@ -6,8 +6,8 @@ namespace ManyElementsTest
 {
     public class ManyElementsTestWindow : EditorWindow
     {
-        public static int NumElementsToAddToGrid = 10000;
-        public static int NumTestPassesToRun = 3;
+        public static int NumElementsToAddToGrid = 20000;
+        public static int NumTestPassesToRun = 1;
         public static Texture2D TestTexture;
 
         [MenuItem("Window/ManyElementsTest %T")]
@@ -16,8 +16,7 @@ namespace ManyElementsTest
         void OnEnable()
         {
             // Disallow resizing to ensure consistent results across runs
-            minSize = new Vector2(800, 1000);
-            maxSize = new Vector2(800, 1000);
+            minSize = maxSize = new Vector2(1000, 800);
 
             rootVisualElement.styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Editor/ManyElementsTest/resources/style.uss"));
             var xmlAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/ManyElementsTest/resources/TestWindow.uxml");
@@ -39,12 +38,16 @@ namespace ManyElementsTest
 
         void showOneGrid(VisualElement gridContainer, Slider sizeSlider)
         {
-            BaseGrid grid;
+            BaseGrid grid = gridContainer.Q<BaseGrid>();
+            if (grid != null)
+                gridContainer.Remove(grid);
 
             // Uncomment the one you want to view:
             //gridContainer.Add(grid = new Grid_ListWithWrapping());
-            gridContainer.Add(grid = new Grid_ManualLayout_WithTransform());
-            //gridContainer.Add(grid = new Grid_ManualLayout());
+            // gridContainer.Add(grid = new Grid_ManualLayout_WithTransform());
+            // gridContainer.Add(grid = new Grid_ManualLayout_NoDisplayChanges());
+            gridContainer.Add(grid = new Grid_ManualLayout_NoLabel());
+            // gridContainer.Add(grid = new Grid_ManualLayout());
             grid.PopulateWithTestElements();
 
             // Setup slider

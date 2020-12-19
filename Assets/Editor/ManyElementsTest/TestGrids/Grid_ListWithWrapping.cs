@@ -4,15 +4,10 @@ using UnityEngine.UIElements;
 namespace ManyElementsTest
 {
     /* 
-     * 
      * This test uses flex-wrap and lets uielements handle all positioning
-     * 
-     * 
      */
     public class Grid_ListWithWrapping : BaseGrid
     {
-        public new class UxmlFactory : UxmlFactory<Grid_ListWithWrapping, UxmlTraits> { }
-
         public Grid_ListWithWrapping()
         {
             Add(ScrollView = new ScrollView());
@@ -34,8 +29,13 @@ namespace ManyElementsTest
 
         public override void PopulateWithTestElements()
         {
+            DetachFromParent(); // this makes a LOT of difference!
+      
             for (int i = 0; i < ManyElementsTestWindow.NumElementsToAddToGrid; i++)
                 ScrollView.contentContainer.Add(new GridElement_ListWithWrapping(ManyElementsTestWindow.TestTexture, "Item " + i));
+         
+            ReattachToParent();
+          
             OnResizeAllElements();
         }
     }
